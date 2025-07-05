@@ -19,7 +19,7 @@ class Letra {
     }
     ~Letra(){}
 
-    int getC(){
+    char getC(){
         return this->C;
     }
 
