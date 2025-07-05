@@ -27,7 +27,7 @@ class Letra {
     public:
     Letra(){
         C = '\0';
-        Ant = -1;
+        // Ant = -1;
         Prox = -1;
     }
     ~Letra(){}
@@ -57,31 +57,46 @@ class Letra {
     }
 };
 
-int lerPalavra() {
-    std::string palavra;
-    // le a palavra
-    for(int i = 0; i < palavra.size(); i++) {
+class Automato {
+    private:
+    std::string Alfabeto;
+    std::vector<int> Estados;
+    std::vector<int> Finais;
+    std::vector<std::vector<Letra>> Tabela;
+    
+    public:
+    Automato(const std::string& nomeArquivo) {
+        // Le o Alfabeto
+        // le os Estados (so o int / so a quantidade)
+        // le os Finais (so o int)
 
+        // Loop de ler Transicao
+        int E; // Estado de orige da Transicao 
+        char A; // Letra lida na transicao
+        int Pos = Alfabeto.find_first_of(A);  // Encontra a Posicao da Letra no Alfabeto
+                                            // Que vai ser o numero da Coluna daquela Letra
+        Tabela[E][Pos].setC(/* Letra */); // Coloca a Letra na ... Letra
+        Tabela[E][Pos].setProx(/* Destino */); // Coloca o Destino na Letra
+        // fim do Loop quando acaba as transicoes
+    }
+};
+    
+int conferirPalavras(Automato& Aut) {
+
+    std::string palavra;
+    // Pede e le a Palavra
+
+    int posAtual = 0;
+    Letra L;
+
+    for(int i = 0; i < palavra.size(); i++){
+        L = Aut.procurarLetra(posAtual);
+        if (palavra[i] == L.getC()){
+            posAtual = L.getProx();
+        } 
     }
 }
 
-std::vector<std::vector<Letra>> criarMatriz_Arquivo() {
-    std::string Alfabeto;
-    std::vector<int> Estados; // SO O NUMERO
-    std::vector<int> Finais; // SO O NUMERO
-    //le o Alfabeto, Estados e os Finais
 
-    std::vector<std::vector<Letra>> Tabela(Estados.size(), std::vector<Letra>(Alfabeto.size() + 1));
 
-    // Loop de ler Transicao
-    int E; // Estado de orige da Transicao 
-    char A; // Letra lida na transicao
-    int Pos = Alfabeto.find_first_of(A);  // Encontra a Posicao da Letra no Alfabeto
-                                          // Que vai ser o numero da Coluna daquela Letra
-    Tabela[E][Pos].setC(/* Letra */); // Coloca a Letra na ... Letra
-    Tabela[E][Pos].setProx(/* Destino */); // Coloca o Destino na Letra
-    // fim do Loop quando acaba as transicoes
-
-    return Tabela;
-}
 #endif
