@@ -2,61 +2,86 @@
 #define AUTOMATO_H
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 
+// Ler as Letras
+// Ler os estados
 
-class Transicao {
+// Estados sao as Linhas
+// Letras sao as Colunas
+
+// Ultima Coluna eh a Flag de Final
+
+// O Estado so precisa saber do seu propio Numero/Index
+
+// A Letra Precisa saber de se char e o proximo Estado
+
+class Letra {
     private:
-    char C; // O que eh para ser Escrito
-    int Prox; // O Estado de Entrada
+    char C;
+    // int Ant;
+    int Prox;
 
     public:
-    Transicao(){
+    Letra(){
         C = '\0';
-        Prox = 0;
+        Ant = -1;
+        Prox = -1;
     }
-    ~Transicao(){}
+    ~Letra(){}
 
-    char getC(){
+    int getC(){
         return this->C;
     }
+
+    // int getAnt(){
+    //     return this->Ant;
+    // }
+
     int getProx(){
         return this->Prox;
     }
-};
 
-class Estado {
-    protected:
-    int Num; // Numero do Estado Atual
-    bool EhFinal; // Flag para se eh Final
-
-    std::vector<Transicao> Transicoes; // Vetor de Transicoes Saindo desse Estado
-    public:
-    Estado(){
-        Num = -1;
-        EhFinal = false;
-    }
-    ~Estado(){}
-
-    void addTrancicao(Transicao& t){
-        this->Transicoes.emplace_back(t);
+    void setC(char c) {
+        this->C = c;
     }
 
-    int fazerTransicao(char c){
-        for(int i = 0; i <= Transicoes.size(); i++)
-            if(Transicoes[i].getC() == c) return Transicoes[i].getProx();
-    return -1;
+    // void setAnt(int a) {
+    //     this->Ant = a;
+    // }
+
+    void setProx(int p) {
+        this->Prox = p;
     }
 };
 
-class Automato {
-    private:
-    std::string Alfabeto; // Alfabeto do Automato
-    std::vector<Estado> Estados; // Vetor de Estados
-    public:
-    Automato(){}
-    ~Automato(){};
-};
+int lerPalavra() {
+    std::string palavra;
+    // le a palavra
+    for(int i = 0; i < palavra.size(); i++) {
 
+    }
+}
+
+std::vector<std::vector<Letra>> criarMatriz_Arquivo() {
+    std::string Alfabeto;
+    std::vector<int> Estados; // SO O NUMERO
+    std::vector<int> Finais; // SO O NUMERO
+    //le o Alfabeto, Estados e os Finais
+
+    std::vector<std::vector<Letra>> Tabela(Estados.size(), std::vector<Letra>(Alfabeto.size() + 1));
+
+    // Loop de ler Transicao
+    int E; // Estado de orige da Transicao 
+    char A; // Letra lida na transicao
+    int Pos = Alfabeto.find_first_of(A);  // Encontra a Posicao da Letra no Alfabeto
+                                          // Que vai ser o numero da Coluna daquela Letra
+    Tabela[E][Pos].setC(/* Letra */); // Coloca a Letra na ... Letra
+    Tabela[E][Pos].setProx(/* Destino */); // Coloca o Destino na Letra
+    // fim do Loop quando acaba as transicoes
+
+    return Tabela;
+}
 #endif
