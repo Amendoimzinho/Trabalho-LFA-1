@@ -2,61 +2,123 @@
 #define AUTOMATO_H
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 
 
-class Transicao {
+class Letra {
     private:
-    char C; // O que eh para ser Escrito
-    int Prox; // O Estado de Entrada
+    char C;
+    int Prox;
 
     public:
-    Transicao(){
-        C = '\0';
-        Prox = 0;
+    Letra(char c = '\0', int p = -1){
+        C = c;
+        Prox = p;
     }
-    ~Transicao(){}
+    ~Letra(){}
 
-    char getC(){
+    int getC(){
         return this->C;
     }
+
     int getProx(){
         return this->Prox;
     }
-};
 
-class Estado {
-    protected:
-    int Num; // Numero do Estado Atual
-    bool EhFinal; // Flag para se eh Final
-
-    std::vector<Transicao> Transicoes; // Vetor de Transicoes Saindo desse Estado
-    public:
-    Estado(){
-        Num = -1;
-        EhFinal = false;
-    }
-    ~Estado(){}
-
-    void addTrancicao(Transicao& t){
-        this->Transicoes.emplace_back(t);
+    void setC(char c) {
+        this->C = c;
     }
 
-    int fazerTransicao(char c){
-        for(int i = 0; i <= Transicoes.size(); i++)
-            if(Transicoes[i].getC() == c) return Transicoes[i].getProx();
-    return -1;
+    void setProx(int p) {
+        this->Prox = p;
     }
 };
 
 class Automato {
     private:
-    std::string Alfabeto; // Alfabeto do Automato
-    std::vector<Estado> Estados; // Vetor de Estados
+    std::string Alfabeto;
+    std::vector<int> Estados;
+    std::vector<int> Finais;
+    std::vector<std::vector<Letra>> Tabela;
+
     public:
-    Automato(){}
-    ~Automato(){};
+
+    // Construtora vai pedir OBRIGATORIAMENTE o arquivo antes de criar
+    // o Automato (pra poder iniciar a Tabela)
+    Automato(const std::string& nomeArquivo) {
+
+        // Le o Alfabeto
+        // le os Estados (so o int / so a quantidade)
+        // le os Finais (so o int)
+
+        // Loop de ler Transicao
+
+        int E; // Estado de orige da Transicao 
+        char A; // Letra lida na transicao
+        Letra L;
+
+        L.setC(A);
+        L.setProx(E);
+        Tabela[E].emplace_back(L);
+
+        // fim do Loop quando acaba as transicoes
+    }
+
+
+    // No estado(i) ve se a letra(c)
+    Letra* procurarLetra(int E, char c) {
+        for(int j = 0; j < Tabela[E].size(); j++) {
+            if(Tabela[E][j].getC() == c) return &Tabela[E][j];
+        }
+        return NULL;
+    }
+
+    void imprimirGramatica() {
+        char S = 'A'; // Como vai de A -> B -> C
+        for(int E = 0; E < Tabela.size(); E++){
+            if(E != 0){
+                if (S = 'S') S++; // Se S for 'S'
+                std::cout << S << " -> ";
+                for(int j = 0; j < Tabela[E].size(); j++){  
+                    std::cout << Tabela[E][j].getC();
+                    std::cout << (E <= Tabela[E][j].getProx()
+                                    ? S - (E - Tabela[E][j].getProx()) // Se o proximo estiver antes 
+                                    : S + (E - Tabela[E][j].getProx())); // Se o proximo estiver Depois
+                    std::cout << " | " << std::endl; // Arrumem isso pq vai ta bugado
+            }
+            if (std::find(Finais.begin(), Finais.end(), E) != Finais.end()) std::cout << "@"; // Se eh estado Final
+            S++; // Aumenta o S (A++ == B)
+            }
+            else if(E == 0){ // Se for o primeiro (pq tem q ser S)
+                std::cout << "S -> ";
+                for(int j = 0; j < Tabela[E].size(); j++){
+                    std::cout << Tabela[E][j].getC(); // A letra a ser lida
+                    std::cout << (S + (E - Tabela[E][j].getProx())); // O proximo estado
+                    std::cout << " | " << std::endl; // O '|' mas tem q arrumar
+            }
+            if (std::find(Finais.begin(), Finais.end(), E) != Finais.end()) std::cout << "@";
+        }
+    }
+}
+~Automato(){}
 };
+    
+void conferirPalavras(Automato& Aut) { // A criacao do Automato vai ter q ser na main
+    std::string palavra;
+    // Pede e le a Palavra
+
+    int posAtual = 0;
+    Letra* L;
+
+    for(int i = 0; i < palavra.size(); i++){
+        L = Aut.procurarLetra(posAtual, palavra[i]);
+        if (L != NULL && palavra[i] == L->getC()){
+            posAtual = L->getProx();
+            // imprime a mudanca de estado e tals
+        }else {/* Msg q nao deu certo */ break;}
+    }
+}
 
 #endif
