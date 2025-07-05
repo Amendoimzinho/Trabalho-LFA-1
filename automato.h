@@ -25,10 +25,10 @@ class Letra {
     int Prox;
 
     public:
-    Letra(){
-        C = '\0';
+    Letra(char c = '\0', int p = -1){
+        C = c;
         // Ant = -1;
-        Prox = -1;
+        Prox = p;
     }
     ~Letra(){}
 
@@ -75,25 +75,54 @@ class Automato {
         // le os Finais (so o int)
 
         // Loop de ler Transicao
+
         int E; // Estado de orige da Transicao 
         char A; // Letra lida na transicao
-        int Pos = Alfabeto.find_first_of(A);  // Encontra a Posicao da Letra no Alfabeto
-                                            // Que vai ser o numero da Coluna daquela Letra
-        Tabela[E][Pos].setC(/* Letra */); // Coloca a Letra na ... Letra
-        Tabela[E][Pos].setProx(/* Destino */); // Coloca o Destino na Letra
+        Letra L;
+
+        L.setC(A);
+        L.setProx(E);
+        Tabela[E].emplace_back(L);
+
         // fim do Loop quando acaba as transicoes
     }
 
 
     // No estado(i) ve se a letra(c)
-    Letra* procurarLetra(int i, char c) {
-        for(int j = 0; j < Tabela.size(); j++) {
-            if(Tabela[i][j].getC() == c) return &Tabela[i][j];
+    Letra* procurarLetra(int E, char c) {
+        for(int j = 0; j < Tabela[E].size(); j++) {
+            if(Tabela[E][j].getC() == c) return &Tabela[E][j];
         }
         return NULL;
     }
 
-    ~Automato(){}
+    void imprimirGramatica() {
+        char S = 'A'; // Como vai de A -> B -> C
+        for(int E = 0; E < Tabela.size(); E++){
+            if(E != 0){
+                if (S = 'S') S++; // Se S for 'S'
+                std::cout << S << " -> ";
+                for(int j = 0; j < Tabela[E].size(); j++){  
+                    std::cout << Tabela[E][j].getC();
+                    std::cout << (E <= Tabela[E][j].getProx()
+                                    ? S - (E - Tabela[E][j].getProx()) // Se o proximo estiver antes 
+                                    : S + (E - Tabela[E][j].getProx())); // Se o proximo estiver Depois
+                    std::cout << " | " << std::endl; // Arrumem isso pq vai ta bugado
+            }
+            if (std::find(Finais.begin(), Finais.end(), E) != Finais.end()) std::cout << "@";
+            S++;
+            }
+            else if(E == 0){
+                std::cout << "S -> ";
+                for(int j = 0; j < Tabela[E].size(); j++){
+                    std::cout << Tabela[E][j].getC();
+                    std::cout << (S + (E - Tabela[E][j].getProx()));
+                    std::cout << " | " << std::endl;
+            }
+        }
+    }
+}
+~Automato(){}
 };
     
 void conferirPalavras(Automato& Aut) {
