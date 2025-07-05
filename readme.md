@@ -16,8 +16,14 @@
 
 ~~- [ ] Sobrecarregar '=' para 'Letra'~~
 - [ ] Implementar o Construtor de 'Automato'
+    - [ ] :warning: Ver como vai abrir o Arquivo
+    - [ ] :warning: Fazer as leituras
+    - [ ] :warning: Fazer o loop das Transicoes
 - [ ] Terminar 'conferirPalavras'
+    - [ ] :exclamation: Pedir e Ler a palavra
+    - [ ] :exclamation: Fazer as Impressoes como o prof pediu
 - [ ] terminar 'imprimirGramatica'
-    -[ ] Arrumar o " | " pq ta errado
+    - [ ] :exclamation: Arrumar o " | " pq ta errado
+    - :bulb: Deem uma checada nela pra ver se ta tudo certo
 
 

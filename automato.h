@@ -6,28 +6,15 @@
 #include <string>
 #include <vector>
 
-// Ler as Letras
-// Ler os estados
-
-// Estados sao as Linhas
-// Letras sao as Colunas
-
-// Ultima Coluna eh a Flag de Final
-
-// O Estado so precisa saber do seu propio Numero/Index
-
-// A Letra Precisa saber de se char e o proximo Estado
 
 class Letra {
     private:
     char C;
-    // int Ant;
     int Prox;
 
     public:
     Letra(char c = '\0', int p = -1){
         C = c;
-        // Ant = -1;
         Prox = p;
     }
     ~Letra(){}
@@ -36,10 +23,6 @@ class Letra {
         return this->C;
     }
 
-    // int getAnt(){
-    //     return this->Ant;
-    // }
-
     int getProx(){
         return this->Prox;
     }
@@ -47,10 +30,6 @@ class Letra {
     void setC(char c) {
         this->C = c;
     }
-
-    // void setAnt(int a) {
-    //     this->Ant = a;
-    // }
 
     void setProx(int p) {
         this->Prox = p;
@@ -109,23 +88,24 @@ class Automato {
                                     : S + (E - Tabela[E][j].getProx())); // Se o proximo estiver Depois
                     std::cout << " | " << std::endl; // Arrumem isso pq vai ta bugado
             }
-            if (std::find(Finais.begin(), Finais.end(), E) != Finais.end()) std::cout << "@";
-            S++;
+            if (std::find(Finais.begin(), Finais.end(), E) != Finais.end()) std::cout << "@"; // Se eh estado Final
+            S++; // Aumenta o S (A++ == B)
             }
-            else if(E == 0){
+            else if(E == 0){ // Se for o primeiro (pq tem q ser S)
                 std::cout << "S -> ";
                 for(int j = 0; j < Tabela[E].size(); j++){
-                    std::cout << Tabela[E][j].getC();
-                    std::cout << (S + (E - Tabela[E][j].getProx()));
-                    std::cout << " | " << std::endl;
+                    std::cout << Tabela[E][j].getC(); // A letra a ser lida
+                    std::cout << (S + (E - Tabela[E][j].getProx())); // O proximo estado
+                    std::cout << " | " << std::endl; // O '|' mas tem q arrumar
             }
+            if (std::find(Finais.begin(), Finais.end(), E) != Finais.end()) std::cout << "@";
         }
     }
 }
 ~Automato(){}
 };
     
-void conferirPalavras(Automato& Aut) {
+void conferirPalavras(Automato& Aut) { // A criacao do Automato vai ter q ser na main
     std::string palavra;
     // Pede e le a Palavra
 
@@ -140,7 +120,5 @@ void conferirPalavras(Automato& Aut) {
         }else {/* Msg q nao deu certo */ break;}
     }
 }
-
-
 
 #endif
