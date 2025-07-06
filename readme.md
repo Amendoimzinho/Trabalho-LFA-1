@@ -19,12 +19,14 @@
     - [x] Ver como vai abrir o Arquivo
     - [x] Fazer as leituras
     - [x] Fazer o loop das Transicoes
-- [ ] Terminar 'conferirPalavras'
-    - [ ] Pedir e Ler a palavra
-    - [ ] Fazer as Impressoes como o prof pediu
+    - [ ] Testar
+- [x] Terminar 'conferirPalavras'
+    - [x] Pedir e Ler a palavra
+    - [x] Fazer as Impressoes como o prof pediu
+    - [ ] Testar
 - [ ] terminar 'imprimirGramatica'
     - [ ] Arrumar o " | " pq ta errado
-    - Deem uma checada nela pra ver se ta tudo certo
+    - [ ] Testar
 - [ ] Terminar o menu
     - [ ] Pedir o arquivo (para leitura)
     - [ ] O print do menu

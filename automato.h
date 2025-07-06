@@ -45,10 +45,8 @@ class Automato {
 
         string linha;
         while(getline(Arq,linha)){
-            if(linha.find("(") != string::npos) {
-                lerTransicao(linha, Tabela);
-            }
-            else if(linha.find("alfabeto") != string::npos) {
+            linha.erase(remove(linha.begin(), linha.end(), ' '), linha.end());
+            if(linha.find("alfabeto") != string::npos) {
                 lerAlfabeto(linha, Alfabeto);
             }
             else if (linha.find("estados") != string::npos) {
@@ -56,6 +54,9 @@ class Automato {
             }
             else if(linha.find("finais") != string::npos) {
                 lerEstados(linha,Finais);
+            }
+            else if(linha.find("(") != string::npos) {
+                lerTransicao(linha, Tabela);
             }
         }
     }
@@ -93,9 +94,39 @@ class Automato {
                     cout << " | " << endl; // O '|' mas tem q arrumar
             }
             if (find(Finais.begin(), Finais.end(), E) != Finais.end()) cout << "@";
-        }       /* ^^^ Criem uma Funcao ou uma macro pra isso? ^^^ */
+            }       /* ^^^ Criem uma Funcao ou uma macro pra isso? ^^^ */
+        }
     }
+
+    int conferirPalavra() {
+    string palavra;
+    cout << "\nDigite a palavra para ser lida\n\n=>";
+    cin >> palavra; limparBuffer();
+
+    int estadoAtual = 0;
+    bool rejeitada = false;
+
+    for(int i = 0; i < palavra.size(); i++) {
+        Transicao* L = procurarTransicao(estadoAtual, palavra[i]);
+        cout << "[q" << estadoAtual << palavra.substr(i) << endl;
+
+        if(!L) {
+            rejeitada = true;
+            break;
+        }
+        estadoAtual = L->Prox;
     }
+
+    // Verifica aceitação após processar todos os caracteres
+    if(!rejeitada && find(Finais.begin(), Finais.end(), estadoAtual) != Finais.end()) {
+        cout << "ACEITA\n";
+    } else {
+        cout << "REJEITA\n";
+    }
+
+    return 0;
+}
+
     ~Automato(){}
 };
 
@@ -115,13 +146,11 @@ void lerEstados(const string& linha, vector<int>& Estados) {
 
     if (inicio == string::npos || fim == string::npos) return;
 
-    string conteudo = linha.substr(inicio + 1, fim - inicio - 1);
+    stringstream ss(linha.substr(inicio + 1, fim - inicio - 1));
 
-    stringstream ss(conteudo);
     string item;
 
     while (getline(ss, item, ',')) {
-        item.erase(remove(item.begin(), item.end(), ' '), item.end());
         item.erase(remove(item.begin(), item.end(), 'q'), item.end());
         if (!item.empty()) {
             Estados.push_back(std::stoi(item));
@@ -144,23 +173,5 @@ void lerTransicao(const string& linha, vector<vector<Transicao>>& Tabela) {
     Tabela[estadoAtual].push_back(Transicao(simbolo, proxEstado));
 }
     
-int conferirPalavras(Automato& Aut) { // A criacao do Automato vai ter q ser na main
-    string palavra;
-    // Pede e le a Palavra
-
-    int posAtual = 0;
-    Transicao* L;
-
-    for(int i = 0; i < palavra.size(); i++){
-        L = Aut.procurarTransicao(posAtual, palavra[i]);
-        if (L != NULL && palavra[i] == L->C){
-            posAtual = L->Prox;
-            // imprime a mudanca de estado e tals
-        }else {/* Msg q nao deu certo */ break;}
-    }
-
-    // return 0 para repetir
-    return -1; // para acabar
-}
 
 #endif

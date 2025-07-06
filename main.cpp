@@ -13,7 +13,7 @@ int abrirMenu() {
     std::cin >> op; limparBuffer();
 
     switch(op) {
-        case 1 : while(conferirPalavras(Aut) != -1); break;
+        case 1 : Aut.conferirPalavra(); break;
         case 2 : Aut.imprimirGramatica(); break;
         /* ... */
         default : return op;
