@@ -3,77 +3,66 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include <string>
+#include <sstream>
 #include <vector>
+
+using namespace std;
 
 void limparBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF); // Puxei do meu trabalho de AED
 }
 
-class Letra {
-    // private:
-    
+class Transicao { 
     public:
     char C;
     int Prox;
 
-    Letra(char c = '\0', int p = -1){
+    Transicao(char c = '\0', int p = -1){
         C = c;
         Prox = p;
     }
-    ~Letra(){}
-
-    // char getC(){
-    //     return this->C;
-    // }
-
-    // int getProx(){
-    //     return this->Prox;
-    // }
-
-    // void setC(char c) {
-    //     this->C = c;
-    // }
-
-    // void setProx(int p) {
-    //     this->Prox = p;
-    // }
+    ~Transicao(){}
 };
 
 class Automato {
     private:
-    std::string Alfabeto;
-    std::vector<int> Estados;
-    std::vector<int> Finais;
-    std::vector<std::vector<Letra>> Tabela;
+    string Alfabeto;
+    vector<int> Estados;
+    vector<int> Finais;
+    vector<vector<Transicao>> Tabela;
 
     public:
 
     // Construtora vai pedir OBRIGATORIAMENTE o arquivo antes de criar
     // o Automato (pra poder iniciar a Tabela)
-    Automato(const std::string& nomeArquivo) {
+    Automato(const string& nomeArquivo) {
 
-        // Le o Alfabeto
-        // le os Estados (so o int / so a quantidade)
-        // le os Finais (so o int)
+        ifstream Arq(nomeArquivo);
+        if(!Arq.is_open()) throw "\nErro ao Abrir Arquivo!\n";
 
-        // Loop de ler Transicao
-
-        int E; // Estado de orige da Transicao 
-        char A; // Letra lida na transicao
-        Letra L;
-
-        L.C = A;
-        L.Prox = E;
-        Tabela[E].emplace_back(L);
-
-        // fim do Loop quando acaba as transicoes
+        string linha;
+        while(getline(Arq,linha)){
+            if(linha.find("(") != string::npos) {
+                lerTransicao(linha, Tabela);
+            }
+            else if(linha.find("alfabeto") != string::npos) {
+                lerAlfabeto(linha, Alfabeto);
+            }
+            else if (linha.find("estados") != string::npos) {
+                lerEstados(linha,Estados);
+            }
+            else if(linha.find("finais") != string::npos) {
+                lerEstados(linha,Finais);
+            }
+        }
     }
 
 
-    // No estado(i) ve se a letra(c)
-    Letra* procurarLetra(int E, char c) {
+    // No estado(i) ve se a Transicao(c)
+    Transicao* procurarTransicao(int E, char c) {
         for(int j = 0; j < Tabela[E].size(); j++) {
             if(Tabela[E][j].C == c) return &Tabela[E][j];
         }
@@ -85,40 +74,85 @@ class Automato {
         for(int E = 0; E < Tabela.size(); E++){
             if(E != 0){
                 if (S = 'S') S++; // Se S for 'S'
-                std::cout << S << " -> ";
+                cout << S << " -> ";
                 for(int j = 0; j < Tabela[E].size(); j++){  
-                    std::cout << Tabela[E][j].C;
-                    std::cout << (E <= Tabela[E][j].Prox
+                    cout << Tabela[E][j].C;
+                    cout << (E <= Tabela[E][j].Prox
                                     ? S - (E - Tabela[E][j].Prox) // Se o proximo estiver antes 
                                     : S + (E - Tabela[E][j].Prox)); // Se o proximo estiver Depois
-                    std::cout << " | " << std::endl; // Arrumem isso pq vai ta bugado
+                    cout << " | " << endl; // Arrumem isso pq vai ta bugado
             }
-            if (std::find(Finais.begin(), Finais.end(), E) != Finais.end()) std::cout << "@"; // Se eh estado Final
+            if (find(Finais.begin(), Finais.end(), E) != Finais.end()) cout << "@"; // Se eh estado Final
             S++; // Aumenta o S (A++ == B)
             }
             else if(E == 0){ // Se for o primeiro (pq tem q ser S)
-                std::cout << "S -> ";
+                cout << "S -> ";
                 for(int j = 0; j < Tabela[E].size(); j++){
-                    std::cout << Tabela[E][j].C; // A letra a ser lida
-                    std::cout << (S + (E - Tabela[E][j].Prox)); // O proximo estado
-                    std::cout << " | " << std::endl; // O '|' mas tem q arrumar
+                    cout << Tabela[E][j].C; // A Transicao a ser lida
+                    cout << (S + (E - Tabela[E][j].Prox)); // O proximo estado
+                    cout << " | " << endl; // O '|' mas tem q arrumar
             }
-            if (std::find(Finais.begin(), Finais.end(), E) != Finais.end()) std::cout << "@";
+            if (find(Finais.begin(), Finais.end(), E) != Finais.end()) cout << "@";
         }       /* ^^^ Criem uma Funcao ou uma macro pra isso? ^^^ */
     }
-}
-~Automato(){}
+    }
+    ~Automato(){}
 };
+
+string lerAlfabeto(const string& linha, string& Alfabeto) {
+    size_t inicio = linha.find('{');
+    size_t fim = linha.find('}');
+
+    if (inicio == string::npos || fim == string::npos) return;
+
+    Alfabeto = linha.substr(inicio + 1, fim - inicio - 1);
+    Alfabeto.erase(remove(Alfabeto.begin(), Alfabeto.end(), ','), Alfabeto.end());
+}
+
+void lerEstados(const string& linha, vector<int>& Estados) {
+    size_t inicio = linha.find('{');
+    size_t fim = linha.find('}');
+
+    if (inicio == string::npos || fim == string::npos) return;
+
+    string conteudo = linha.substr(inicio + 1, fim - inicio - 1);
+
+    stringstream ss(conteudo);
+    string item;
+
+    while (getline(ss, item, ',')) {
+        item.erase(remove(item.begin(), item.end(), ' '), item.end());
+        item.erase(remove(item.begin(), item.end(), 'q'), item.end());
+        if (!item.empty()) {
+            Estados.push_back(std::stoi(item));
+        }
+    }
+}
+
+void lerTransicao(const string& linha, vector<vector<Transicao>>& Tabela) {
+    size_t inicioEstado = linha.find('q') + 1;
+    size_t fimEstado = linha.find(',');
+
+    int estadoAtual = stoi(linha.substr(inicioEstado, fimEstado - inicioEstado));
+
+    char simbolo = linha[fimEstado + 1];
+
+    size_t iniProx = linha.rfind('q') + 1;
+
+    int proxEstado = stoi(linha.substr(iniProx));
+
+    Tabela[estadoAtual].push_back(Transicao(simbolo, proxEstado));
+}
     
 int conferirPalavras(Automato& Aut) { // A criacao do Automato vai ter q ser na main
-    std::string palavra;
+    string palavra;
     // Pede e le a Palavra
 
     int posAtual = 0;
-    Letra* L;
+    Transicao* L;
 
     for(int i = 0; i < palavra.size(); i++){
-        L = Aut.procurarLetra(posAtual, palavra[i]);
+        L = Aut.procurarTransicao(posAtual, palavra[i]);
         if (L != NULL && palavra[i] == L->C){
             posAtual = L->Prox;
             // imprime a mudanca de estado e tals

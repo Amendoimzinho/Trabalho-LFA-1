@@ -15,10 +15,10 @@
 ### A fazer
 
 ~~- [ ] Sobrecarregar '=' para 'Letra'~~
-- [ ] Implementar o Construtor de 'Automato'
+- [x] Implementar o Construtor de 'Automato'
     - [x] Ver como vai abrir o Arquivo
-    - [ ] Fazer as leituras
-    - [ ] Fazer o loop das Transicoes
+    - [x] Fazer as leituras
+    - [x] Fazer o loop das Transicoes
 - [ ] Terminar 'conferirPalavras'
     - [ ] Pedir e Ler a palavra
     - [ ] Fazer as Impressoes como o prof pediu
