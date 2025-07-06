@@ -6,34 +6,39 @@
 #include <string>
 #include <vector>
 
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF); // Puxei do meu trabalho de AED
+}
 
 class Letra {
-    private:
+    // private:
+    
+    public:
     char C;
     int Prox;
 
-    public:
     Letra(char c = '\0', int p = -1){
         C = c;
         Prox = p;
     }
     ~Letra(){}
 
-    char getC(){
-        return this->C;
-    }
+    // char getC(){
+    //     return this->C;
+    // }
 
-    int getProx(){
-        return this->Prox;
-    }
+    // int getProx(){
+    //     return this->Prox;
+    // }
 
-    void setC(char c) {
-        this->C = c;
-    }
+    // void setC(char c) {
+    //     this->C = c;
+    // }
 
-    void setProx(int p) {
-        this->Prox = p;
-    }
+    // void setProx(int p) {
+    //     this->Prox = p;
+    // }
 };
 
 class Automato {
@@ -59,8 +64,8 @@ class Automato {
         char A; // Letra lida na transicao
         Letra L;
 
-        L.setC(A);
-        L.setProx(E);
+        L.C = A;
+        L.Prox = E;
         Tabela[E].emplace_back(L);
 
         // fim do Loop quando acaba as transicoes
@@ -70,7 +75,7 @@ class Automato {
     // No estado(i) ve se a letra(c)
     Letra* procurarLetra(int E, char c) {
         for(int j = 0; j < Tabela[E].size(); j++) {
-            if(Tabela[E][j].getC() == c) return &Tabela[E][j];
+            if(Tabela[E][j].C == c) return &Tabela[E][j];
         }
         return NULL;
     }
@@ -82,10 +87,10 @@ class Automato {
                 if (S = 'S') S++; // Se S for 'S'
                 std::cout << S << " -> ";
                 for(int j = 0; j < Tabela[E].size(); j++){  
-                    std::cout << Tabela[E][j].getC();
-                    std::cout << (E <= Tabela[E][j].getProx()
-                                    ? S - (E - Tabela[E][j].getProx()) // Se o proximo estiver antes 
-                                    : S + (E - Tabela[E][j].getProx())); // Se o proximo estiver Depois
+                    std::cout << Tabela[E][j].C;
+                    std::cout << (E <= Tabela[E][j].Prox
+                                    ? S - (E - Tabela[E][j].Prox) // Se o proximo estiver antes 
+                                    : S + (E - Tabela[E][j].Prox)); // Se o proximo estiver Depois
                     std::cout << " | " << std::endl; // Arrumem isso pq vai ta bugado
             }
             if (std::find(Finais.begin(), Finais.end(), E) != Finais.end()) std::cout << "@"; // Se eh estado Final
@@ -94,18 +99,18 @@ class Automato {
             else if(E == 0){ // Se for o primeiro (pq tem q ser S)
                 std::cout << "S -> ";
                 for(int j = 0; j < Tabela[E].size(); j++){
-                    std::cout << Tabela[E][j].getC(); // A letra a ser lida
-                    std::cout << (S + (E - Tabela[E][j].getProx())); // O proximo estado
+                    std::cout << Tabela[E][j].C; // A letra a ser lida
+                    std::cout << (S + (E - Tabela[E][j].Prox)); // O proximo estado
                     std::cout << " | " << std::endl; // O '|' mas tem q arrumar
             }
             if (std::find(Finais.begin(), Finais.end(), E) != Finais.end()) std::cout << "@";
-        }
+        }       /* ^^^ Criem uma Funcao ou uma macro pra isso? ^^^ */
     }
 }
 ~Automato(){}
 };
     
-void conferirPalavras(Automato& Aut) { // A criacao do Automato vai ter q ser na main
+int conferirPalavras(Automato& Aut) { // A criacao do Automato vai ter q ser na main
     std::string palavra;
     // Pede e le a Palavra
 
@@ -114,11 +119,14 @@ void conferirPalavras(Automato& Aut) { // A criacao do Automato vai ter q ser na
 
     for(int i = 0; i < palavra.size(); i++){
         L = Aut.procurarLetra(posAtual, palavra[i]);
-        if (L != NULL && palavra[i] == L->getC()){
-            posAtual = L->getProx();
+        if (L != NULL && palavra[i] == L->C){
+            posAtual = L->Prox;
             // imprime a mudanca de estado e tals
         }else {/* Msg q nao deu certo */ break;}
     }
+
+    // return 0 para repetir
+    return -1; // para acabar
 }
 
 #endif
