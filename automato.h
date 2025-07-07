@@ -134,35 +134,35 @@ class Automato {
             if(Tabela[E][j].C == c) return &Tabela[E][j];
         }
         return NULL;
-    }
+}
 
-    void imprimirGramatica() {
-        char S = 'A'; // Como vai de A -> B -> C
-        for(int E = 0; E < Tabela.size(); E++){
-            if(E != 0){
-                if (S = 'S') S++; // Se S for 'S'
-                cout << S << " -> ";
-                for(int j = 0; j < Tabela[E].size(); j++){  
-                    cout << Tabela[E][j].C;
-                    cout << (E <= Tabela[E][j].Prox
-                                    ? S - (E - Tabela[E][j].Prox) // Se o proximo estiver antes 
-                                    : S + (E - Tabela[E][j].Prox)); // Se o proximo estiver Depois
-                    cout << " | " << endl; // Arrumem isso pq vai ta bugado
+ void imprimirGramatica() {
+    char S = 'A'; // Começa em 'A' (B, C, D...)
+    for(int E = 0; E < Tabela.size(); E++) {
+        if(E != 0) {
+            if (S == 'S') S++; // Evita conflito com 'S' inicial
+            cout << S << " -> ";
+            for(int j = 0; j < Tabela[E].size(); j++) {  
+                if(j > 0) cout << " | ";
+                cout << Tabela[E][j].C;
+                cout << (char)((S - (E - Tabela[E][j].Prox)) == '@' ? 'S' : (S - (E - Tabela[E][j].Prox)));
+            } 
+            if (find(Finais.begin(), Finais.end(), E) != Finais.end()) cout << " | @";
+            S++;
+            cout << endl;
+        } 
+        else if(E == 0) {
+            cout << "S -> ";
+            for(int j = 0; j < Tabela[E].size(); j++) {  
+                if(j > 0) cout << " | ";
+                cout << Tabela[E][j].C;
+                cout << (char)(S - (E - Tabela[E][j].Prox) - 1);
             }
-            if (find(Finais.begin(), Finais.end(), E) != Finais.end()) cout << "@"; // Se eh estado Final
-            S++; // Aumenta o S (A++ == B)
-            }
-            else if(E == 0){ // Se for o primeiro (pq tem q ser S)
-                cout << "S -> ";
-                for(int j = 0; j < Tabela[E].size(); j++){
-                    cout << Tabela[E][j].C; // A Transicao a ser lida
-                    cout << (S + (E - Tabela[E][j].Prox)); // O proximo estado
-                    cout << " | " << endl; // O '|' mas tem q arrumar
-            }
-            if (find(Finais.begin(), Finais.end(), E) != Finais.end()) cout << "@";
-            }       /* ^^^ Criem uma Funcao ou uma macro pra isso? ^^^ */
+            if (find(Finais.begin(), Finais.end(), E) != Finais.end()) cout << " | @";
+            cout << endl;
         }
     }
+}
 
     int conferirPalavra() {
     string palavra;

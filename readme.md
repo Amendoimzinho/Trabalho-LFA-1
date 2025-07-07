@@ -24,11 +24,13 @@
     - [x] Pedir e Ler a palavra
     - [x] Fazer as Impressoes como o prof pediu
     - [x] Testar
-- [ ] terminar 'imprimirGramatica'
-    - [ ] Arrumar o " | " pq ta errado
-    - [ ] Testar
+- [x] terminar 'imprimirGramatica'
+    - [x] Arrumar o " | " pq ta errado
+    - [x] Testar
 - [ ] Terminar o menu
     - [x] Pedir o arquivo (para leitura)
-    - [ ] O print do menu
+        - [ ] Buga tudo se nao conseguir abrir o arquivo
+        - [ ] Para de funcionar se vc digita letras???
+    - [x] O print do menu
     - [x] Arrumar ficar pedindo arquivo toda hora
 
