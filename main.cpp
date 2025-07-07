@@ -15,22 +15,15 @@ bool arquivoExiste(const std::string& nomeArquivo) {
     return arquivo.good();
 }
 
-void limpar_terminal() {
-    #ifdef _WIN32
-        system("cls");
-    #else
-        system("clear");
-    #endif
-}
-
 int abrirMenu(Automato& Aut) {
     limpar_terminal();
 
     int op;
-    cout << "======= Menu =======\n" 
+    cout << "========== Menu ==========\n" 
             " 1 - Pedir uma Palavra\n"
             " 2 - Imprimir a Gramatica\n"
             "-1 - Encerrar\n"
+            "==========================\n"
             "\n=> ";
     if(!(cin >> op)) {cin.clear(); limparBuffer(); return 0;}
     limparBuffer();
@@ -45,7 +38,8 @@ int abrirMenu(Automato& Aut) {
 
 int main() {
     string arquivo;
-    cout << "\nDigite o arquivo para ser lido\n\n=> ";
+    limpar_terminal();
+    cout << "\nDigite o arquivo para ser lido\n=> ";
 
     do {
         cin >> arquivo;

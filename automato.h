@@ -15,6 +15,14 @@ void limparBuffer() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
+void limpar_terminal() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
 class Transicao { 
     public:
     char C;
@@ -28,15 +36,15 @@ class Transicao {
 };
 
 
-void lerAlfabeto(const string& linha, string& Alfabeto) {
-    size_t inicio = linha.find('{');
-    size_t fim = linha.find('}');
+// void lerAlfabeto(const string& linha, string& Alfabeto) {
+//     size_t inicio = linha.find('{');
+//     size_t fim = linha.find('}');
 
-    if (inicio == string::npos || fim == string::npos) return;
+//     if (inicio == string::npos || fim == string::npos) return;
 
-    Alfabeto = linha.substr(inicio + 1, fim - inicio - 1);
-    Alfabeto.erase(remove(Alfabeto.begin(), Alfabeto.end(), ','), Alfabeto.end());
-}
+//     Alfabeto = linha.substr(inicio + 1, fim - inicio - 1);
+//     Alfabeto.erase(remove(Alfabeto.begin(), Alfabeto.end(), ','), Alfabeto.end());
+// }
 
 void lerEstados(const string& linha, vector<int>& Estados) {
     size_t inicio = linha.find('{');
@@ -112,10 +120,10 @@ class Automato {
         string linha;
         while(getline(Arq,linha)){
             linha.erase(remove(linha.begin(), linha.end(), ' '), linha.end());
-            if(linha.find("alfabeto") != string::npos) {
+            /*if(linha.find("alfabeto") != string::npos) {
                 lerAlfabeto(linha, Alfabeto);
             }
-            else if (linha.find("estados") != string::npos) {
+            else*/ if (linha.find("estados") != string::npos) {
                 lerEstados(linha,Estados,Tabela);
             }
             else if(linha.find("finais") != string::npos) {
@@ -138,7 +146,8 @@ class Automato {
 
  void imprimirGramatica() {
     char S = 'A'; // Começa em 'A' (B, C, D...)
-    cout << "\n======= Gramatica =======\n";
+    limpar_terminal();
+    cout << "========== Gramatica ==========\n";
     for(int E = 0; E < Tabela.size(); E++) {
         if(E != 0) {
             if (S == 'S') S++; // Evita conflito com 'S' inicial
@@ -169,11 +178,14 @@ class Automato {
             cout << endl;
         }
     }
+    cout << "===============================\n";
 }
 
-    int conferirPalavra() {
+int conferirPalavra() {
     string palavra;
-    cout << "\nDigite a palavra para ser lida\n\n=>";
+    limpar_terminal();
+    cout << "======== Digite a palavra ===========\n"
+            "=> ";
     cin >> palavra; limparBuffer();
 
     int estadoAtual = 0;
@@ -199,7 +211,7 @@ class Automato {
         cout << palavra.substr(i) << endl <<
                 "REJEITA\n";
     }
-
+    cout << "=====================================\n";
     return 0;
 }
 
