@@ -1,7 +1,7 @@
 
 ### Consideracoes
 
-- Usem o Alfabeto como se fosse um vetor se char
+- Usem o Alfabeto como se fosse um vetor de char
 - O vetor de Estados eh pra guardar como se fosse um enum, ou seja, apenas o numero de cada estado (q1 -> 1, q2 -> 2)
     - Isso pq pra mexer na matriz fica mais facil
 - Msm coisa para o vetor de Finais
@@ -26,11 +26,12 @@
     - [x] Testar
 - [x] terminar 'imprimirGramatica'
     - [x] Arrumar o " | " pq ta errado
+        - [ ] bugou o '|' para estados finais 
     - [x] Testar
 - [ ] Terminar o menu
     - [x] Pedir o arquivo (para leitura)
-        - [ ] Buga tudo se nao conseguir abrir o arquivo
-        - [ ] Para de funcionar se vc digita letras???
+        - [x] Buga tudo se nao conseguir abrir o arquivo
+    - [x] Para de funcionar se vc digita letras???
     - [x] O print do menu
     - [x] Arrumar ficar pedindo arquivo toda hora
 

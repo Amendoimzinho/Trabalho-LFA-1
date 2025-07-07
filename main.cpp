@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "automato.h"
 
@@ -9,6 +10,10 @@ void ENTER () {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+bool arquivoExiste(const std::string& nomeArquivo) {
+    ifstream arquivo(nomeArquivo.c_str());
+    return arquivo.good();
+}
 
 void limpar_terminal() {
     #ifdef _WIN32
@@ -22,13 +27,13 @@ int abrirMenu(Automato& Aut) {
     limpar_terminal();
 
     int op;
-    cout << "\n====== Menu ======\n" 
+    cout << "======= Menu =======\n" 
             " 1 - Pedir uma Palavra\n"
             " 2 - Imprimir a Gramatica\n"
-            "-1 - Encerrar\n";
+            "-1 - Encerrar\n"
+            "\n=> ";
     if(!(cin >> op)) {cin.clear(); limparBuffer(); return 0;}
     limparBuffer();
-
     switch(op) {
         case 1 : Aut.conferirPalavra(); ENTER(); break;
         case 2 : Aut.imprimirGramatica(); ENTER(); break;
@@ -40,8 +45,16 @@ int abrirMenu(Automato& Aut) {
 
 int main() {
     string arquivo;
-    cout << "\nDigite o arquivo para ser lido\n\n=>";
-    cin >> arquivo; limparBuffer();
+    cout << "\nDigite o arquivo para ser lido\n\n=> ";
+
+    do {
+        cin >> arquivo;
+        limparBuffer();
+        limpar_terminal();
+        if (!arquivoExiste(arquivo)) {
+            cout << "\nErro! Digite novamente\n=> ";
+        }
+    } while (!arquivoExiste(arquivo));
 
     Automato Aut(arquivo);
 

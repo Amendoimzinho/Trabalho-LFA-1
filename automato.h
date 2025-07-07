@@ -138,6 +138,7 @@ class Automato {
 
  void imprimirGramatica() {
     char S = 'A'; // Começa em 'A' (B, C, D...)
+    cout << "\n======= Gramatica =======\n";
     for(int E = 0; E < Tabela.size(); E++) {
         if(E != 0) {
             if (S == 'S') S++; // Evita conflito com 'S' inicial
