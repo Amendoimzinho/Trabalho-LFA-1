@@ -26,7 +26,7 @@ int abrirMenu(Automato& Aut) {
 
     int op;
     cout << "========== Menu ==========\n" 
-            " 1 - Pedir uma Palavra\n"
+            " 1 - Ler uma Palavra\n"
             " 2 - Imprimir a Gramatica\n"
             "-1 - Encerrar\n"
             "==========================\n"
