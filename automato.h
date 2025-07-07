@@ -27,6 +27,72 @@ class Transicao {
     ~Transicao(){}
 };
 
+
+void lerAlfabeto(const string& linha, string& Alfabeto) {
+    size_t inicio = linha.find('{');
+    size_t fim = linha.find('}');
+
+    if (inicio == string::npos || fim == string::npos) return;
+
+    Alfabeto = linha.substr(inicio + 1, fim - inicio - 1);
+    Alfabeto.erase(remove(Alfabeto.begin(), Alfabeto.end(), ','), Alfabeto.end());
+}
+
+void lerEstados(const string& linha, vector<int>& Estados) {
+    size_t inicio = linha.find('{');
+    size_t fim = linha.find('}');
+
+    if (inicio == string::npos || fim == string::npos) return;
+
+    stringstream ss(linha.substr(inicio + 1, fim - inicio - 1));
+
+    string item;
+
+    while (getline(ss, item, ',')) {
+        item.erase(remove(item.begin(), item.end(), 'q'), item.end());
+        if (!item.empty()) {
+            Estados.push_back(std::stoi(item));
+        }
+    }
+}
+
+void lerEstados(const string& linha, vector<int>& Estados, vector<vector<Transicao>>& Tabela) {
+    size_t inicio = linha.find('{');
+    size_t fim = linha.find('}');
+
+    if (inicio == string::npos || fim == string::npos) return;
+
+    stringstream ss(linha.substr(inicio + 1, fim - inicio - 1));
+
+    string item;
+
+    while (getline(ss, item, ',')) {
+        item.erase(remove(item.begin(), item.end(), 'q'), item.end());
+        if (!item.empty()) {
+            Estados.push_back(std::stoi(item));
+            Tabela.resize(Tabela.size() + 1);
+        }
+    }
+}
+
+void lerTransicao(const string& linha, vector<vector<Transicao>>& Tabela) {
+    size_t inicioEstado = linha.find('q') + 1;
+    size_t fimEstado = linha.find(',');
+
+    int estadoAtual = stoi(linha.substr(inicioEstado, fimEstado - inicioEstado));
+
+    char simbolo = linha[fimEstado + 1];
+
+    size_t iniProx = linha.rfind('q') + 1;
+
+    int proxEstado = stoi(linha.substr(iniProx));
+
+    Transicao T(simbolo,proxEstado);
+
+    Tabela[estadoAtual].emplace_back(T);
+}
+    
+
 class Automato {
     private:
     string Alfabeto;
@@ -45,12 +111,13 @@ class Automato {
 
         string linha;
         while(getline(Arq,linha)){
+            cout << linha;
             linha.erase(remove(linha.begin(), linha.end(), ' '), linha.end());
             if(linha.find("alfabeto") != string::npos) {
                 lerAlfabeto(linha, Alfabeto);
             }
             else if (linha.find("estados") != string::npos) {
-                lerEstados(linha,Estados);
+                lerEstados(linha,Estados,Tabela);
             }
             else if(linha.find("finais") != string::npos) {
                 lerEstados(linha,Finais);
@@ -108,7 +175,7 @@ class Automato {
 
     for(int i = 0; i < palavra.size(); i++) {
         Transicao* L = procurarTransicao(estadoAtual, palavra[i]);
-        cout << "[q" << estadoAtual << palavra.substr(i) << endl;
+        cout << "[q" << estadoAtual << "] " << palavra.substr(i) << endl;
 
         if(!L) {
             rejeitada = true;
@@ -129,49 +196,5 @@ class Automato {
 
     ~Automato(){}
 };
-
-string lerAlfabeto(const string& linha, string& Alfabeto) {
-    size_t inicio = linha.find('{');
-    size_t fim = linha.find('}');
-
-    if (inicio == string::npos || fim == string::npos) return;
-
-    Alfabeto = linha.substr(inicio + 1, fim - inicio - 1);
-    Alfabeto.erase(remove(Alfabeto.begin(), Alfabeto.end(), ','), Alfabeto.end());
-}
-
-void lerEstados(const string& linha, vector<int>& Estados) {
-    size_t inicio = linha.find('{');
-    size_t fim = linha.find('}');
-
-    if (inicio == string::npos || fim == string::npos) return;
-
-    stringstream ss(linha.substr(inicio + 1, fim - inicio - 1));
-
-    string item;
-
-    while (getline(ss, item, ',')) {
-        item.erase(remove(item.begin(), item.end(), 'q'), item.end());
-        if (!item.empty()) {
-            Estados.push_back(std::stoi(item));
-        }
-    }
-}
-
-void lerTransicao(const string& linha, vector<vector<Transicao>>& Tabela) {
-    size_t inicioEstado = linha.find('q') + 1;
-    size_t fimEstado = linha.find(',');
-
-    int estadoAtual = stoi(linha.substr(inicioEstado, fimEstado - inicioEstado));
-
-    char simbolo = linha[fimEstado + 1];
-
-    size_t iniProx = linha.rfind('q') + 1;
-
-    int proxEstado = stoi(linha.substr(iniProx));
-
-    Tabela[estadoAtual].push_back(Transicao(simbolo, proxEstado));
-}
-    
 
 #endif

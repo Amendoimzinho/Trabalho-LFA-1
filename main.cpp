@@ -2,15 +2,18 @@
 #include <string>
 #include "automato.h"
 
-
+using namespace std;
 
 int abrirMenu() {
-    std::string arquivo; // Le o nome do arquivo
+    string arquivo; // Le o nome do arquivo
+    cout << "\nDigite o arquivo para ser lido\n\n=>";
+    cin >> arquivo; limparBuffer();
     Automato Aut(arquivo);
 
     // Printf e tals
     int op;
-    std::cin >> op; limparBuffer();
+    cout << "eae? 1";
+    cin >> op; limparBuffer();
 
     switch(op) {
         case 1 : Aut.conferirPalavra(); break;
