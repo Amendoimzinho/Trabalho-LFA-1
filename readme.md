@@ -30,5 +30,5 @@
 - [ ] Terminar o menu
     - [x] Pedir o arquivo (para leitura)
     - [ ] O print do menu
-    - [ ] Arrumer ficar arquivo toda hora
+    - [x] Arrumar ficar pedindo arquivo toda hora
 

@@ -111,7 +111,6 @@ class Automato {
 
         string linha;
         while(getline(Arq,linha)){
-            cout << linha;
             linha.erase(remove(linha.begin(), linha.end(), ' '), linha.end());
             if(linha.find("alfabeto") != string::npos) {
                 lerAlfabeto(linha, Alfabeto);

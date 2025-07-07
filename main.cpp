@@ -4,15 +4,11 @@
 
 using namespace std;
 
-int abrirMenu() {
-    string arquivo; // Le o nome do arquivo
-    cout << "\nDigite o arquivo para ser lido\n\n=>";
-    cin >> arquivo; limparBuffer();
-    Automato Aut(arquivo);
+int abrirMenu(Automato& Aut) {
 
     // Printf e tals
     int op;
-    cout << "eae? 1";
+    cout << "eae?";
     cin >> op; limparBuffer();
 
     switch(op) {
@@ -26,6 +22,12 @@ int abrirMenu() {
 }
 
 int main() {
-    while(abrirMenu() != -1);
+    string arquivo;
+    cout << "\nDigite o arquivo para ser lido\n\n=>";
+    cin >> arquivo; limparBuffer();
+
+    Automato Aut(arquivo);
+
+    while(abrirMenu(Aut) != -1);
     return 0;
 }
