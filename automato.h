@@ -134,7 +134,7 @@ class Automato {
             if(Tabela[E][j].C == c) return &Tabela[E][j];
         }
         return NULL;
-}
+    }
 
  void imprimirGramatica() {
     char S = 'A'; // Começa em 'A' (B, C, D...)
