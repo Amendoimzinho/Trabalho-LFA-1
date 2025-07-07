@@ -5,12 +5,18 @@
 
 using namespace std;
 
+// Pede Enter para o User
+// Pré: nenhuma
+// Pós: pede o Enter
 void ENTER () {
     cout << "\nPressione ENTER para voltar...";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-bool arquivoExiste(const std::string& nomeArquivo) {
+// Confere se um Arquivo existe
+// Pré: 'nomeArquivo' eh uma string valida
+// Pós: retorna se o arquivo existe ou nao;
+bool arquivoExiste(const string& nomeArquivo) {
     ifstream arquivo(nomeArquivo.c_str());
     return arquivo.good();
 }
@@ -39,7 +45,7 @@ int abrirMenu(Automato& Aut) {
 int main() {
     string arquivo;
     limpar_terminal();
-    cout << "\nDigite o arquivo para ser lido\n=> ";
+    cout << "Digite o arquivo para ser lido\n=> ";
 
     do {
         cin >> arquivo;
