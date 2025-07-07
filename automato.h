@@ -147,8 +147,11 @@ class Automato {
                 if(j > 0) cout << " | ";
                 cout << Tabela[E][j].C;
                 cout << (char)((S - (E - Tabela[E][j].Prox)) == '@' ? 'S' : (S - (E - Tabela[E][j].Prox)));
-            } 
-            if (find(Finais.begin(), Finais.end(), E) != Finais.end()) cout << " | @";
+            }
+            if (find(Finais.begin(), Finais.end(), E) != Finais.end()) {
+                if(Tabela[E].size() > 0) cout << " | ";
+                cout << "@";
+            }
             S++;
             cout << endl;
         } 
@@ -159,7 +162,10 @@ class Automato {
                 cout << Tabela[E][j].C;
                 cout << (char)(S - (E - Tabela[E][j].Prox) - 1);
             }
-            if (find(Finais.begin(), Finais.end(), E) != Finais.end()) cout << " | @";
+             if (find(Finais.begin(), Finais.end(), E) != Finais.end()) {
+                if(Tabela[E].size() > 0) cout << " | ";
+                cout << "@";
+            }
             cout << endl;
         }
     }
