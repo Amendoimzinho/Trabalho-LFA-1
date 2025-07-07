@@ -14,7 +14,6 @@ using namespace std;
 // Limpa o buffer de entrada
 // Pré:  Nenhuma
 // Pós:  Buffer stdin vazio até a próxima linha
-void limparBuffer();
 void limparBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
