@@ -4,17 +4,34 @@
 
 using namespace std;
 
-int abrirMenu(Automato& Aut) {
+void ENTER () {
+    cout << "\nPressione ENTER para voltar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
 
-    // Printf e tals
+
+void limpar_terminal() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
+int abrirMenu(Automato& Aut) {
+    limpar_terminal();
+
     int op;
-    cout << "eae?";
-    cin >> op; limparBuffer();
+    cout << "\n====== Menu ======\n" 
+            " 1 - Pedir uma Palavra\n"
+            " 2 - Imprimir a Gramatica\n"
+            "-1 - Encerrar\n";
+    if(!(cin >> op)) {cin.clear(); limparBuffer(); return 0;}
+    limparBuffer();
 
     switch(op) {
-        case 1 : Aut.conferirPalavra(); break;
-        case 2 : Aut.imprimirGramatica(); break;
-        /* ... */
+        case 1 : Aut.conferirPalavra(); ENTER(); break;
+        case 2 : Aut.imprimirGramatica(); ENTER(); break;
         default : return op;
     }
 

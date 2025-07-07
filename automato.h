@@ -7,12 +7,12 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <limits>
 
 using namespace std;
 
 void limparBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF); // Puxei do meu trabalho de AED
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
 class Transicao { 
@@ -171,23 +171,26 @@ class Automato {
 
     int estadoAtual = 0;
     bool rejeitada = false;
+    int i = 0;
 
-    for(int i = 0; i < palavra.size(); i++) {
+    for(;; i++) {
+        cout << "[q" << estadoAtual << "] ";
+        if(i >= palavra.size()) break;
         Transicao* L = procurarTransicao(estadoAtual, palavra[i]);
-        cout << "[q" << estadoAtual << "] " << palavra.substr(i) << endl;
-
         if(!L) {
             rejeitada = true;
             break;
         }
+        cout << palavra.substr(i) << endl;
+
         estadoAtual = L->Prox;
     }
-
     // Verifica aceitação após processar todos os caracteres
     if(!rejeitada && find(Finais.begin(), Finais.end(), estadoAtual) != Finais.end()) {
-        cout << "ACEITA\n";
+        cout << "\nACEITA\n";
     } else {
-        cout << "REJEITA\n";
+        cout << palavra.substr(i) << endl <<
+                "REJEITA\n";
     }
 
     return 0;
