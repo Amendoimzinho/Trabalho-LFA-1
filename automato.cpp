@@ -22,16 +22,6 @@ void limparTerminal() {
     #endif
 }
 
-void lerAlfabeto(const string& linha, string& Alfabeto) {
-    size_t inicio = linha.find('{');
-    size_t fim = linha.find('}');
-
-    if (inicio == string::npos || fim == string::npos) return;
-
-    Alfabeto = linha.substr(inicio + 1, fim - inicio - 1);
-    trim(Alfabeto, ',');
-}
-
 void lerEstadosFinais(const string& linha, vector<int>& Estados) {
     size_t inicio = linha.find('{');
     size_t fim = linha.find('}');
@@ -50,7 +40,7 @@ void lerEstadosFinais(const string& linha, vector<int>& Estados) {
     }
 }
 
-void lerEstados(const string& linha, vector<int>& Estados, vector<vector<Transicao>>& Tabela) {
+void lerEstados(const string& linha, vector<vector<Transicao>>& Tabela) {
     size_t inicio = linha.find('{');
     size_t fim = linha.find('}');
 
@@ -61,11 +51,7 @@ void lerEstados(const string& linha, vector<int>& Estados, vector<vector<Transic
     string item;
 
     while (getline(ss, item, ',')) {
-        trim(item, 'q');
-        if (!item.empty()) {
-            Estados.push_back(stoi(item));
-            Tabela.resize(Tabela.size() + 1);
-        }
+        Tabela.resize(Tabela.size() + 1);
     }
 }
 
@@ -102,12 +88,9 @@ Automato::Automato(const string& nomeArquivo) {
     string linha;
     while(getline(Arq,linha)){
         trim(linha, ' ');
-
-        if(linha.find("alfabeto") != string::npos) {
-            lerAlfabeto(linha, Alfabeto);
-        }
-        else if (linha.find("estados") != string::npos) {
-            lerEstados(linha,Estados,Tabela);
+        
+        if (linha.find("estados") != string::npos) {
+            lerEstados(linha,Tabela);
         }
         else if(linha.find("finais") != string::npos) {
             lerEstadosFinais(linha,Finais);
@@ -148,8 +131,7 @@ void Automato::conferirPalavra() {
     string palavra;
 
     cout << "======== Digite a palavra ===========\n=> ";
-    cin >> palavra; 
-    limparBuffer();
+    cin >> palavra; limparBuffer();
     cout << endl;
 
     trim(palavra, ' ');

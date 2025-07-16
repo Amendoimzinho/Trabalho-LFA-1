@@ -51,8 +51,7 @@ int main() {
     cout << "Digite o arquivo para ser lido\n=> ";
 
     do {
-        cin >> arquivo;
-        limparBuffer();
+        cin >> arquivo; limparBuffer();
         limparTerminal();
         if (!arquivoExiste(arquivo)) {
             cout << "\nErro! Digite novamente\n=> ";

@@ -15,8 +15,6 @@ public:
 
 class Automato {
 private:
-    std::string Alfabeto;
-    std::vector<int> Estados;
     std::vector<int> Finais;
     std::vector<std::vector<Transicao>> Tabela;
 
