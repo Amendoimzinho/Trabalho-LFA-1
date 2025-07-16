@@ -18,6 +18,10 @@ void limparBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+void trim(string& str, char rmv) {
+    str.erase(remove(str.begin(), str.end(), rmv), str.end());
+}
+
 // Limpa o Terminal
 // Pré:  Nenhuma
 // Pós:  Terminal limpo
@@ -55,7 +59,7 @@ void lerAlfabeto(const string& linha, string& Alfabeto) {
     if (inicio == string::npos || fim == string::npos) return;
 
     Alfabeto = linha.substr(inicio + 1, fim - inicio - 1);
-    Alfabeto.erase(remove(Alfabeto.begin(), Alfabeto.end(), ','), Alfabeto.end());
+    trim(Alfabeto, ',');
 }
 
 // Tira os Estados Finais de uma linha
@@ -73,7 +77,8 @@ void lerEstadosFinais(const string& linha, vector<int>& Estados) {
     string item;
 
     while (getline(ss, item, ',')) {
-        item.erase(remove(item.begin(), item.end(), 'q'), item.end());
+        trim(item, 'q');
+
         if (!item.empty()) {
             Estados.push_back(stoi(item));
         }
@@ -97,7 +102,7 @@ void lerEstados(const string& linha, vector<int>& Estados, vector<vector<Transic
     string item;
 
     while (getline(ss, item, ',')) {
-        item.erase(remove(item.begin(), item.end(), 'q'), item.end());
+        trim(item, 'q');
         if (!item.empty()) {
             Estados.push_back(stoi(item));
             Tabela.resize(Tabela.size() + 1);
@@ -114,18 +119,20 @@ void lerTransicao(const string& linha, vector<vector<Transicao>>& Tabela) {
     size_t fimEstado = linha.find(',');
 
     int estadoAtual = stoi(linha.substr(inicioEstado, fimEstado - inicioEstado));
-
     char simbolo = linha[fimEstado + 1];
 
     size_t iniProx = linha.rfind('q') + 1;
-
     int proxEstado = stoi(linha.substr(iniProx));
 
     Transicao T(simbolo,proxEstado);
 
     Tabela[estadoAtual].emplace_back(T);
 }
-    
+
+char pegarLetra(int Estado) {
+    return Estado == 0 ? 'S' : (Estado > 18 ? 'A' + Estado  : 'A' + (Estado - 1));
+}
+
 
 class Automato {
     private:
@@ -139,119 +146,103 @@ class Automato {
 // Construtor de Automato
 // Pré: 'nomeArquivo' eh um nome de um arquivo .txt valido
 // Pós: informacoes de 'nomeArquivo' dentro do Automato construido
-    Automato(const string& nomeArquivo) {
+Automato(const string& nomeArquivo) {
 
-        ifstream Arq(nomeArquivo);
-        if(!Arq.is_open()) throw "\nErro ao Abrir Arquivo!\n";
+    ifstream Arq(nomeArquivo);
+    if(!Arq.is_open()) throw "\nErro ao Abrir Arquivo!\n";
 
-        string linha;
-        while(getline(Arq,linha)){
-            linha.erase(remove(linha.begin(), linha.end(), ' '), linha.end());
-            if(linha.find("alfabeto") != string::npos) {
-                lerAlfabeto(linha, Alfabeto);
-            }
-            else if (linha.find("estados") != string::npos) {
-                lerEstados(linha,Estados,Tabela);
-            }
-            else if(linha.find("finais") != string::npos) {
-                lerEstadosFinais(linha,Finais);
-            }
-            else if(linha.find("(") != string::npos) {
-                lerTransicao(linha, Tabela);
-            }
+    string linha;
+    while(getline(Arq,linha)){
+        trim(linha, ' ');
+
+        if(linha.find("alfabeto") != string::npos) {
+            lerAlfabeto(linha, Alfabeto);
+        }
+        else if (linha.find("estados") != string::npos) {
+            lerEstados(linha,Estados,Tabela);
+        }
+        else if(linha.find("finais") != string::npos) {
+            lerEstadosFinais(linha,Finais);
+        }
+        else if(linha.find("(") != string::npos) {
+            lerTransicao(linha, Tabela);
         }
     }
+}
 
 
 // Encontra a transicao que contem 'c' no estado 'E'
 // Pré: 'E' um indice valido de 'Tabela'
 // Pós: retorna o ponteiro para a Transicao encontrada
 //      ou nullptr se nao encontrar
-    Transicao* procurarTransicao(int E, char c) {
-        for(int j = 0; j < Tabela[E].size(); j++) {
-            if(Tabela[E][j].C == c) return &Tabela[E][j];
-        }
-        return nullptr;
+Transicao* procurarTransicao(int E, char c) {
+    for(int j = 0; j < Tabela[E].size(); j++) {
+        if(Tabela[E][j].C == c) return &Tabela[E][j];
     }
+    return nullptr;
+}
 
 // Imprime a Gramatica do Automato
 // Pré: Automato corretamete construido
 // Pós: Impresso no Terminal a Gramatica do Automato
  void imprimirGramatica() {
-    char S = 'A'; // Começa em 'A' (B, C, D...)
     limpar_terminal();
     cout << "========== Gramatica ==========\n";
-    for(int E = 0; E < Tabela.size(); E++) {
-        if(E != 0) {
-            if (S == 'S') S++; // Evita conflito com 'S' inicial
-            cout << S << " -> ";
-            for(int j = 0; j < Tabela[E].size(); j++) {  
-                if(j > 0) cout << " | ";
-                cout << Tabela[E][j].C;
-                cout << (char)((S - (E - Tabela[E][j].Prox)) == '@' ? 'S' : (S - (E - Tabela[E][j].Prox)));
-            }
-            if (find(Finais.begin(), Finais.end(), E) != Finais.end()) {
-                if(Tabela[E].size() > 0) cout << " | ";
-                cout << "@";
-            }
-            S++;
-            cout << endl;
-        } 
-        else if(E == 0) {
-            cout << "S -> ";
-            for(int j = 0; j < Tabela[E].size(); j++) {  
-                if(j > 0) cout << " | ";
-                cout << Tabela[E][j].C;
-                cout << (char)(S - (E - Tabela[E][j].Prox) - 1);
-            }
-             if (find(Finais.begin(), Finais.end(), E) != Finais.end()) {
-                if(Tabela[E].size() > 0) cout << " | ";
-                cout << "@";
-            }
-            cout << endl;
+
+    for (int i = 0; i < Tabela.size(); i++) {
+        cout << pegarLetra(i) << " -> ";
+        for (int j = 0; j < Tabela[i].size(); j++) {
+            cout << Tabela[i][j].C << pegarLetra(Tabela[i][j].Prox);
+            if (j < Tabela[i].size() - 1) cout << " | ";
         }
+        if (this->ehFinal(i)) cout << " | @";
+        cout << endl; 
     }
     cout << "===============================\n";
 }
 
-// Pede e confere se uma palavra eh aceita pelo Automato
-// Pré: Automato corretamete construido
-// Pós: Palavra conferida pelo Terminal
-int conferirPalavra() {
+bool ehFinal(int Pos) {
+    return find(Finais.begin(), Finais.end(), Pos) != Finais.end();
+}
+
+void conferirPalavra() {
     string palavra;
     limpar_terminal();
-    cout << "======== Digite a palavra ===========\n"
-            "=> ";
-    cin >> palavra; limparBuffer();
-    palavra.erase(remove(palavra.begin(), palavra.end(), ' '), palavra.end());
+
+    cout << "======== Digite a palavra ===========\n=> ";
+    cin >> palavra; 
+    limparBuffer();
+    cout << endl;
+
+    trim(palavra, ' ');
 
     int estadoAtual = 0;
     bool rejeitada = false;
     int i = 0;
 
-    for(;; i++) {
-        cout << "[q" << estadoAtual << "] ";
-        if(i >= palavra.size()) break;
-        Transicao* L = procurarTransicao(estadoAtual, palavra[i]);
+    if (palavra == "@") {
+        cout << "[q0] @\n";
+    }
 
-        if(!L && !(palavra.size() == 1 && palavra[0] == '@')) {
+    if(palavra != "@")
+    for (; i < palavra.size(); i++) {
+        cout << "[q" << estadoAtual << "] " << palavra.substr(i) << endl;
+
+        Transicao* T = this->procurarTransicao(estadoAtual, palavra[i]);
+        if (!T) {
             rejeitada = true;
             break;
         }
-        if ((palavra.size() == 1 && palavra[0] == '@')) {cout << "@\n[q0]";break;}
-        cout << palavra.substr(i) << endl;
-
-        estadoAtual = L->Prox;
+        estadoAtual = T->Prox;
     }
 
-    if(!rejeitada && find(Finais.begin(), Finais.end(), estadoAtual) != Finais.end()) {
-        cout << "\nACEITA\n";
+    if (!rejeitada && this->ehFinal(estadoAtual)) {
+        cout << "[q" << estadoAtual << "]\n\nACEITA\n";
     } else {
-        cout << palavra.substr(i) << endl <<
-                "REJEITA\n";
+        if (i == palavra.size() ) cout << "[q" << estadoAtual << "]\n";
+        cout << "\nREJEITA\n";
     }
     cout << "=====================================\n";
-    return 0;
 }
 
     ~Automato(){}
