@@ -14,6 +14,12 @@ void trim(string& str, char rmv) {
     str.erase(remove(str.begin(), str.end(), rmv), str.end());
 }
 
+void ENTER () {
+    cout << "\nPressione ENTER para voltar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    limparTerminal();
+}
+
 void limparTerminal() {
     #ifdef _WIN32
         system("cls");
@@ -22,6 +28,10 @@ void limparTerminal() {
     #endif
 }
 
+/// @brief Tira os estados da linha recebida
+///        colocando eles no vetor recebido
+/// @param linha A string contendo os estados
+/// @param Estados O vetor que recebera os estados
 void lerEstadosFinais(const string& linha, vector<int>& Estados) {
     size_t inicio = linha.find('{');
     size_t fim = linha.find('}');
@@ -40,21 +50,22 @@ void lerEstadosFinais(const string& linha, vector<int>& Estados) {
     }
 }
 
+/// @brief Redimensiona a Tabela de acordo com a quantidade de estados na linha
+/// @param linha A string contendo os estados
+/// @param Tabela A Tabela do Automato a ser redimensionada
 void lerEstados(const string& linha, vector<vector<Transicao>>& Tabela) {
     size_t inicio = linha.find('{');
     size_t fim = linha.find('}');
-
     if (inicio == string::npos || fim == string::npos) return;
 
-    stringstream ss(linha.substr(inicio + 1, fim - inicio - 1));
-
-    string item;
-
-    while (getline(ss, item, ',')) {
-        Tabela.resize(Tabela.size() + 1);
-    }
+    const string conteudo = linha.substr(inicio + 1, fim - inicio - 1);
+    const size_t num_estados = count(conteudo.begin(), conteudo.end(), ',') + 1;
+    Tabela.resize(Tabela.size() + num_estados);
 }
 
+/// @brief Le e atualiza a Tabela com uma Transicao
+/// @param linha A string contendo a Transicao
+/// @param Tabela A tabela do Automato a ser atualizada
 void lerTransicao(const string& linha, vector<vector<Transicao>>& Tabela) {
     size_t inicioEstado = linha.find('q') + 1;
     size_t fimEstado = linha.find(',');

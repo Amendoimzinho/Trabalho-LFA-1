@@ -1,34 +1,28 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <limits>
 #include "automato.h"
 
 using namespace std;
 
-// Pede Enter para o User
-// Pré: nenhuma
-// Pós: pede o Enter
-void ENTER () {
-    cout << "\nPressione ENTER para voltar...";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    limparTerminal();
-}
-
-// Confere se um Arquivo existe
-// Pré: 'nomeArquivo' eh uma string valida
-// Pós: retorna se o arquivo existe ou nao;
+/// @brief Testa se um arquivo existe
+/// @param nomeArquivo 'string' diretorio do arquivo
+/// @return 'true' se o arquivo existe
+///         'false' se nao encontrar (para abertura)
 bool arquivoExiste(const string& nomeArquivo) {
     ifstream arquivo(nomeArquivo.c_str());
     return arquivo.good();
 }
 
+/// @brief Menu de opcoes do programa
+/// @param Aut Um 'Automato' ja construido
+/// @return O valor de funcionamento (0 para encerrar)
 int abrirMenu(Automato& Aut) {
     int op;
     cout << "========== Menu ==========\n" 
             " 1 - Ler uma Palavra\n"
             " 2 - Imprimir a Gramatica\n"
-            "-1 - Encerrar\n"
+            " 0 - Encerrar\n"
             "==========================\n"
             "\n=> ";
     
@@ -42,7 +36,7 @@ int abrirMenu(Automato& Aut) {
         default : return op;
     }
 
-    return 0;
+    return 1;
 }
 
 int main() {
@@ -61,6 +55,6 @@ int main() {
     limparTerminal();
     Automato Aut(arquivo);
 
-    while(abrirMenu(Aut) != -1);
+    while(abrirMenu(Aut));
     return 0;
 }

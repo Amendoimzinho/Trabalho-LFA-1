@@ -6,7 +6,7 @@ no menu tem duas opcoes:
 - ========== Menu ==========
 - 1 - Ler uma Palavra      -> Vai pedir uma palavra para ser processada
 - 2 - Imprimir a Gramatica -> Vai imprimir a gramatica regular do Automato
-- -1 - Encerrar             -> Vai encerrar o Programa
+- 0 - Encerrar             -> Vai encerrar o Programa
 
 
 Feito por: Noam Daniel Wandscheer Brecher
