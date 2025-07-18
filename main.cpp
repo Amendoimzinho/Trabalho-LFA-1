@@ -10,8 +10,8 @@ using namespace std;
 /// @return 'true' se o arquivo existe
 ///         'false' se nao encontrar (para abertura)
 bool arquivoExiste(const string& nomeArquivo) {
-    ifstream arquivo(nomeArquivo.c_str());
-    return arquivo.good();
+    ifstream arquivo(nomeArquivo); // Abre o arquivo
+    return arquivo.good(); // Retorna se deu certo ou nao
 }
 
 /// @brief Menu de opcoes do programa
@@ -26,11 +26,11 @@ int abrirMenu(Automato& Aut) {
             "==========================\n"
             "\n=> ";
     
-    if(!(cin >> op)) {cin.clear(); limparBuffer(); return 0;}
+    if(!(cin >> op)) {cin.clear(); limparBuffer(); return 0;} // Se for colocado um nao 'int' encerra;
     limparBuffer();
     limparTerminal();
 
-    switch(op) {
+    switch(op) { // Switch da operacao do usuario
         case 1 : Aut.conferirPalavra(); ENTER(); break;
         case 2 : Aut.imprimirGramatica(); ENTER(); break;
         default : return op;
@@ -44,6 +44,7 @@ int main() {
     limparTerminal();
     cout << "Digite o arquivo para ser lido\n=> ";
 
+    // Enquanto o usuario nao der um arquivo valido ele pede um novo
     do {
         cin >> arquivo; limparBuffer();
         limparTerminal();
@@ -53,8 +54,8 @@ int main() {
     } while (!arquivoExiste(arquivo));
 
     limparTerminal();
-    Automato Aut(arquivo);
+    Automato Aut(arquivo); // Constroi o Automato
 
-    while(abrirMenu(Aut));
+    while(abrirMenu(Aut)); // Abre o menu
     return 0;
 }

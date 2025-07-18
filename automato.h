@@ -14,7 +14,7 @@ class Transicao {
 public:
     char C;
     int Prox;
-    Transicao(char c = '\0', int p = -1);
+    Transicao(char chr = '\0', int prx = -1);
     ~Transicao();
 };
 
@@ -24,6 +24,7 @@ private:
     std::vector<int> Finais;
     std::vector<std::vector<Transicao>> Tabela;
 
+protected:
     /// @brief Pega a letra que 'Estado' representa
     /// @param Estado Um 'int' > 0
     /// @return O caractere equivalente ao estado
