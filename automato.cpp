@@ -141,7 +141,7 @@ void Automato::imprimirGramatica() {
             cout << Tabela[i][j].C << pegarLetra(Tabela[i][j].Prox); // Imprime a Transicao
             if (j < Tabela[i].size() - 1) cout << " | "; // Se ainda tiver Transicoes imprime o '|'
         }
-        if (this->ehFinal(i)) cout << " | @"; // Se for um estado final adiciona a transicao final
+        if (this->ehFinal(i)) cout << (Tabela[i].size() ? " | @" : "@"); // Se for um estado final adiciona a transicao final
         cout << endl; 
     }
     cout << "===============================\n";
