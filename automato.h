@@ -1,7 +1,7 @@
 #ifndef AUTOMATO_H
 #define AUTOMATO_H
 
-/// @author Noam Daniel Wandscheer Brecher
+/// @author @Amendoimzinho
 /// @file automato.h
 /// @brief Header da classe Automato
 

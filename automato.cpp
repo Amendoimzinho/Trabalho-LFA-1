@@ -6,6 +6,10 @@
 
 using namespace std;
 
+/// @author @Amendoimzinho
+/// @file automato.cpp
+/// @brief Implementacoes de 'automato.h'
+
 void limparBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora todos os 'char' restantes ate o prox '\n'
 }

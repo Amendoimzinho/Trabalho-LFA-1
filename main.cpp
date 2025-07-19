@@ -5,6 +5,9 @@
 
 using namespace std;
 
+/// @author @Amendoimzinho
+/// @file main.cpp
+
 /// @brief Testa se um arquivo existe
 /// @param nomeArquivo 'string' diretorio do arquivo
 /// @return 'true' se o arquivo existe
